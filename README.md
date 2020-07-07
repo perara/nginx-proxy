@@ -4,38 +4,38 @@ A simple container that proxy passes to an external source.
 
 A number of great containers for reverse proxying to containers exist (I'm a fan of [jwilder/nginx-proxy](https://github.com/jwilder/nginx-proxy)) however I couldn't find any that would proxy pass to external sources on the fly.
 
-Simply run:
+This version supports **tcp**, **http** with **basic_auth** if needed.
+
+
+### Running with docker
 
 ```bash
-docker run -d -p 80:80 -e HTTP_PROTOCOL=<protocol> -e TARGET_SERVER=<proxy location> guysoft/nginx-proxy-pass
+docker run -d -p 80:80 -e PROTOCOL=<protocol> -e LISTEN_PORT=<port> -e TARGET_SERVER=<proxy location> perara/nginx-proxy
 ```
-
-For example, want to proxy everything to google? WHY NOT?!
+### Running with docker-compose
 
 ```bash
-docker run -d -p 80:80 -e HTTP_PROTOCOL=https -e TARGET_SERVER=google.com guysoft/nginx-proxy-pass
+version: "2"
+services:
+
+  example.com:
+    build: .
+    ports:
+      - 3307:3306
+    environment:
+      PROTOCOL: http
+      LISTEN_PORT: 3306
+      TARGET_SERVER: http://example.com:80,http://hotmail.com:80
+      HTTP_AUTH_USERNAME: admin
+      HTTP_AUTH_PASSWORD: admin
 ```
 
-Or maybe another server on your network:
+### Environment Variables
 
-```bash
-docker run -d -p 80:80 -e HTTP_PROTOCOL=http -e TARGET_SERVER=192.168.8.15:8080 guysoft/nginx-proxy-pass
-```
-
-## Using paths
-
-In certain instances, you may wish to reverse proxy into a subfolder of the target server. You can do this by passing a path in the target server:
-
-```bash
-docker run -d -p 80:80 -e HTTP_PROTOCOL=http -e TARGET_SERVER=192.168.8.15:8080/path guysoft/nginx-proxy-pass
-```
-
-### Filtering
-
-Sometimes, the scripts in the target server are hardcoded to the specific path. In order to correct this, you can use the ```FILTER_PATH``` environment variable:
-
-```bash
-docker run -d -p 80:80 -e HTTP_PROTOCOL=http -e TARGET_SERVER=192.168.8.15:8080/path -e FILTER_PATH=1 guysoft/nginx-proxy-pass
-```
-
-This will re-write the URLs in the response, allowing your reverse proxy to work as desired. However, this should only be done in instances where the path is hardcoded in the target script files.
+| Environment        | Required | Example               | Possible Values      |
+|--------------------|----------|-----------------------|----------------------|
+| PROTOCOL           | x        | http                  | http,https,tcp       |
+| LISTEN_PORT        | x        | 80                    | 1-65535              |
+| TARGET_SERVER      | x        | http://example.com:80 | Comma Separated List |
+| HTTP_AUTH_USERNAME |          | admin                 | Any                  |
+| HTTP_AUTH_PASSWORD |          | admin                 | Any                  |

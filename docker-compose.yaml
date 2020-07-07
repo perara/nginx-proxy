@@ -1,0 +1,13 @@
+version: "2"
+services:
+
+  example.com:
+    build: .
+    ports:
+      - 3307:3306
+    environment:
+      PROTOCOL: http
+      LISTEN_PORT: 3306
+      TARGET_SERVER: http://example.com:80
+      HTTP_AUTH_USERNAME: admin
+      HTTP_AUTH_PASSWORD: admin
