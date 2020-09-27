@@ -61,7 +61,8 @@ server {
     proxy_set_header           Host ${HOST_SERVER:-\$host};
     proxy_set_header           X-Real-IP \$remote_addr;
     proxy_set_header           X-Forwarded-For \$proxy_add_x_forwarded_for;
-
+    fastcgi_buffers 16 16k; 
+    fastcgi_buffer_size 32k;
     proxy_connect_timeout      150;
     proxy_send_timeout         100;
     proxy_read_timeout         100;
