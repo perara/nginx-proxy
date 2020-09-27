@@ -66,9 +66,9 @@ server {
     proxy_connect_timeout      150;
     proxy_send_timeout         100;
     proxy_read_timeout         100;
-    proxy_buffer_size          128k;
-    proxy_buffers              4 256k;
-    proxy_busy_buffers_size    256k;
+    proxy_buffer_size          256k;
+    proxy_buffers              4 512k;
+    proxy_busy_buffers_size    512k;
     client_max_body_size       0;
 
     proxy_set_header           Upgrade \$http_upgrade;
